@@ -1,0 +1,49 @@
+﻿@using BlazorDapperSPA.Data
+
+@page "/listitems"
+@inject IItemService ItemService
+
+<h2>Collection Item Details</h2>
+<p>
+    <a href="/additem">Create New Collection Item</a>
+</p>
+@if (items == null)
+{
+    <img src="./basicloader.gif" />
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Designation</th>
+                <th>Collection</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Designation</td>
+                    <td>@item.UserCollectionName</td>
+                    <td>
+                        <a href='/edititem/@item.Id'>Edit</a>
+                        <a href='/deleteitem/@item.Id'>Delete</a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    IEnumerable<ItemModel> items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await ItemService.GetItems();
+    }
+}   

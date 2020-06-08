@@ -1,0 +1,65 @@
+USE master  
+CREATE DATABASE MyCollectionManagerDB;  
+  
+GO  
+  
+USE MyCollectionManagerDB 
+  
+CREATE TABLE [dbo].[Collection] (  
+    [Id]       INT           IDENTITY (1, 1) NOT NULL,  
+    [Name]     NVARCHAR (250) NULL,  
+    [Category] NVARCHAR (250) NULL,  
+    PRIMARY KEY CLUSTERED ([Id] ASC)  
+);  
+  
+GO  
+  
+CREATE TABLE [dbo].[Item] (  
+    [Id]           INT            IDENTITY (1, 1) NOT NULL,  
+    [Name]         NVARCHAR (250) NULL,  
+    [Designation]  NVARCHAR (250) NULL,  
+    [CollectionId] INT            NULL,  
+    CONSTRAINT [PK_Item] PRIMARY KEY CLUSTERED ([Id] ASC)  
+);  
+  
+GO  
+  
+CREATE PROCEDURE [dbo].Add_Item
+    @Name NVARCHAR(250),  
+    @Designation NVARCHAR(250),  
+    @CollectionId INT  
+AS  
+    INSERT INTO dbo.Item (Name,Designation,CollectionId)  
+    VALUES (@Name,@Designation,@CollectionId)         
+  
+GO  
+  
+CREATE PROCEDURE [dbo].Delete_Item  
+    @Id INT  
+AS  
+    DELETE FROM dbo.Item WHERE Id = @Id   
+  
+GO  
+  
+CREATE PROCEDURE [dbo].[Get_AllItems]  
+AS  
+    SELECT itm.*,c.Name CollectionName FROM dbo.Item itm LEFT JOIN dbo.Collection c ON itm.CollectionId = c.Id ORDER BY itm.Name    
+  
+GO  
+  
+CREATE PROCEDURE [dbo].Get_SingleItem  
+    @Id INT  
+AS  
+    SELECT itm.*,c.Name CollectionName from dbo.Item itm LEFT JOIN dbo.Collection c ON itm.CollectionId = c.Id WHERE itm.Id = @Id   
+  
+GO  
+  
+CREATE PROCEDURE [dbo].Update_Item  
+    @Id INT,  
+    @Name VARCHAR(250),  
+    @Designation VARCHAR(250),  
+    @CollectionId INT  
+AS  
+    UPDATE dbo.Item SET Name = @Name, Designation = @Designation, CollectionId = @CollectionId Where Id = @Id   
+  
+GO  

@@ -1,0 +1,48 @@
+﻿@using BlazorDapperSPA.Data
+
+@page "/listcollections"
+@inject IUserCollectionService UserCollectionService
+
+<h2>Collection Details</h2>
+<p>
+    <a href="/addcollection">Create New Collection</a>
+</p>
+
+@if (collections == null)
+{
+    <img src="./basicloader.gif" />
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var collection in collections)
+            {
+                <tr>
+                    <td>@collection.Name</td>
+                    <td>@collection.Category</td>
+                    <td>
+                        <a href='/editcollection/@collection.Id'>Edit</a>
+                        <a href='/deletecollection/@collection.Id'>Delete</a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    IEnumerable<UserCollection> collections;
+
+    protected override async Task OnInitializedAsync()
+    {
+        collections = await UserCollectionService.GetCollections();
+    }
+}

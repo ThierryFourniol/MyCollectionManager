@@ -1,0 +1,52 @@
+﻿@using BlazorDapperSPA.Data
+
+@page "/deleteitem/{id:int}"
+@inject NavigationManager NavigationManager
+@inject IItemService ItemService
+
+<h2>Confirm Delete</h2>
+<p>Are you sure you want to delete this Collection Item with Id :<b> @id</b></p>
+<br />
+<div class="col-md-4">
+    <table class="table">
+        <tr>
+            <td>Name</td>
+            <td>@item.Name</td>
+        </tr>
+        <tr>
+            <td>Designation</td>
+            <td>@item.Designation</td>
+        </tr>
+        <tr>
+            <td>Collection</td>
+            <td>@item.UserCollectionName</td>
+        </tr>
+    </table>
+    <div class="form-group">
+        <input type="button" value="Delete" @onclick="@Delete" class="btn btn-primary" />
+        <input type="button" value="Cancel" @onclick="@Cancel" class="btn" />
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int id { get; set; }
+    ItemModel item = new ItemModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        item = await ItemService.SingleItem(id);
+    }
+
+    protected async Task Delete()
+    {
+        await ItemService.DeleteItem(id);
+        NavigationManager.NavigateTo("listitems");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("listitems");
+    }
+}   

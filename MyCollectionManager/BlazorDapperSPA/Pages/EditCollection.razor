@@ -1,0 +1,52 @@
+﻿@using BlazorDapperSPA.Data
+
+@page "/editcollection/{id:int}"
+@inject NavigationManager NavigationManager
+@inject IUserCollectionService UserCollectionService
+
+<h2>Edit Collection</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Name" class="control-label">Name</label>
+                <input for="Name" class="form-control" @bind="@collection.Name" />
+            </div>
+            <div class="form-group">
+                <label for="Category" class="control-label">Category</label>
+                <input for="Category" class="form-control" @bind="@collection.Category" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary" @onclick="@UpdateCollection" value="Update" />
+            <input type="button" class="btn" @onclick="@Cancel" value="Cancel" />
+        </div>
+    </div>
+</form>
+
+@code {
+
+    [Parameter]
+    public int id { get; set; }
+
+    UserCollection collection = new UserCollection();
+
+    protected override async Task OnInitializedAsync()
+    {
+        collection = await UserCollectionService.SingleCollection(id);
+    }
+
+    protected async Task UpdateCollection()
+    {
+        await UserCollectionService.EditCollection(id, collection);
+        NavigationManager.NavigateTo("listcollections");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("listcollections");
+    }
+}   

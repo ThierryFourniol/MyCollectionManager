@@ -1,0 +1,46 @@
+﻿@using BlazorDapperSPA.Data
+
+@page "/addcollection"
+@inject NavigationManager NavigationManager
+@inject IUserCollectionService UserCollectionService
+
+<h2>Create Collection</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Name" class="control-label">Name</label>
+                <input for="Name" class="form-control" @bind="@userCollection.Name" />
+            </div>
+            <div class="form-group">
+                <label for="Category" class="control-label">Category</label>
+                <input for="Category" class="form-control" @bind="@userCollection.Category" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateCollection" value="Save" />
+                <input type="button" class="btn" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+
+    UserCollection userCollection = new UserCollection();
+
+    protected async Task CreateCollection()
+    {
+        await UserCollectionService.CreateCollection(userCollection);
+        NavigationManager.NavigateTo("listcollections");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("listcollections");
+    }
+}   

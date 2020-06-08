@@ -1,0 +1,48 @@
+﻿@using BlazorDapperSPA.Data
+
+@page "/deletecollection/{id:int}"
+@inject NavigationManager NavigationManager
+@inject IUserCollectionService CollectionService
+
+<h2>Confirm Delete</h2>
+<p>Are you sure you want to delete this Collection with Id :<b> @id</b></p>
+<br />
+<div class="col-md-4">
+    <table class="table">
+        <tr>
+            <td>Name</td>
+            <td>@collection.Name</td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td>@collection.Category</td>
+        </tr>
+    </table>
+    <div class="form-group">
+        <input type="button" value="Delete" @onclick="@Delete" class="btn btn-primary" />
+        <input type="button" value="Cancel" @onclick="@Cancel" class="btn" />
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int id { get; set; }
+    UserCollection collection = new UserCollection();
+
+    protected override async Task OnInitializedAsync()
+    {
+        collection = await CollectionService.SingleCollection(id);
+    }
+
+    protected async Task Delete()
+    {
+        await CollectionService.DeleteCollection(id);
+        NavigationManager.NavigateTo("listcollections");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("listcollections");
+    }
+}   
